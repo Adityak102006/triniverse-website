@@ -44,10 +44,6 @@ Follow these steps to run the studio platform on your local machine:
 ## Customization & Content 
 The website relies on React components enriched with `framer-motion` for entrance effects and visual momentum. 
 - You can pinpoint textual copy, project cards, and gradient configurations directly inside each respective file under the `/src/components/sections/` directory.
-## Contact
-- **Email:** theart.illeryuniverse@gmail.com
-- **Established:** 2026, Lucknow
 
 *Motion by Design.*
 
-# triniverse-website

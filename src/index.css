@@ -1,0 +1,21 @@
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=Space+Mono:ital,wght@0,400;0,700;1,400;1,700&family=Syne:wght@400..800&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-syne: "Syne", sans-serif;
+  --font-dm-sans: "DM Sans", sans-serif;
+  --font-space-mono: "Space Mono", monospace;
+  --font-bebas: "Bebas Neue", sans-serif;
+}
+
+body {
+  font-family: var(--font-dm-sans);
+  background-color: #F2F0EA;
+  color: #1A1A1A;
+  overflow-x: hidden;
+}
+
+::selection {
+  background-color: #FF78AC;
+  color: #1A1A1A;
+}

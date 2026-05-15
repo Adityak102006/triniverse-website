@@ -41,7 +41,7 @@ export default function Reel() {
               <div className="absolute w-20 h-20 rounded-full bg-white/60 animate-[ping_2s_cubic-bezier(0,0,0.2,1)_infinite_0.5s]" />
               
               <div className="relative w-20 h-20 rounded-full bg-white backdrop-blur-xl border border-white flex items-center justify-center shadow-lg group-hover:scale-110 transition-all duration-300">
-                <Play className="w-8 h-8 text-[#FF78AC] ml-2" fill="currentColor" />
+                <Play className="w-8 h-8 text-[#FF78AC] ml-1" fill="currentColor" />
               </div>
             </div>
           </div>

@@ -19,3 +19,12 @@ body {
   background-color: #FF78AC;
   color: #1A1A1A;
 }
+
+/* Hide scrollbar utility for horizontal gallery */
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}

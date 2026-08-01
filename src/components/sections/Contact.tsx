@@ -1,7 +1,57 @@
 import { motion } from 'motion/react';
-import { Instagram, Linkedin, Send } from 'lucide-react';
+import { Instagram, Linkedin, Send, CheckCircle, AlertTriangle } from 'lucide-react';
+import { useState, useRef } from 'react';
+import emailjs from '@emailjs/browser';
+import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
+import { db } from '../../lib/firebase';
+
 
 export default function Contact() {
+  const formRef = useRef<HTMLFormElement>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!formRef.current || isSubmitting) return;
+
+    setIsSubmitting(true);
+    setSubmitStatus('idle');
+
+    const form = formRef.current;
+    const name    = (form.elements.namedItem('from_name')  as HTMLInputElement).value.trim();
+    const email   = (form.elements.namedItem('from_email') as HTMLInputElement).value.trim();
+    const message = (form.elements.namedItem('message')    as HTMLTextAreaElement).value.trim();
+
+    try {
+      // Run EmailJS + Firestore in parallel
+      await Promise.all([
+        emailjs.sendForm(
+          import.meta.env.VITE_EMAILJS_SERVICE_ID,
+          import.meta.env.VITE_EMAILJS_TEMPLATE_ID,
+          form,
+          import.meta.env.VITE_EMAILJS_PUBLIC_KEY,
+        ),
+        addDoc(collection(db, 'inquiries'), {
+          name,
+          email,
+          message,
+          createdAt: serverTimestamp(),
+        }),
+      ]);
+
+      setSubmitStatus('success');
+      form.reset();
+    } catch (error) {
+      console.error('Submission error:', error);
+      setSubmitStatus('error');
+    } finally {
+      setIsSubmitting(false);
+      setTimeout(() => setSubmitStatus('idle'), 5000);
+    }
+  };
+
+
   return (
     <section id="contact" className="py-32 bg-[#F2F0EA]">
       <div className="max-w-4xl mx-auto px-6 flex flex-col items-center">
@@ -48,6 +98,8 @@ export default function Contact() {
         </motion.div>
 
         <motion.form 
+          ref={formRef}
+          onSubmit={handleSubmit}
           className="w-full bg-white/50 backdrop-blur-[24px] border border-[#1A1A1A]/10 rounded-[24px] p-8 md:p-12 shadow-[0_20px_40px_rgba(0,0,0,0.05)] relative overflow-hidden"
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -61,7 +113,9 @@ export default function Contact() {
             <div className="space-y-2">
               <label className="font-space-mono text-xs uppercase text-[#1A1A1A]/70 font-bold px-2">Name</label>
               <input 
-                type="text" 
+                type="text"
+                name="from_name"
+                required
                 className="w-full bg-white/60 border border-[#1A1A1A]/10 rounded-xl px-4 py-3 text-[#1A1A1A] font-dm-sans focus:outline-none focus:border-[#FF78AC] focus:shadow-[0_0_10px_rgba(255,120,172,0.15)] transition-all focus:bg-white placeholder-[#1A1A1A]/30"
                 placeholder="Aryan Sharma"
               />
@@ -69,7 +123,9 @@ export default function Contact() {
             <div className="space-y-2">
               <label className="font-space-mono text-xs uppercase text-[#1A1A1A]/70 font-bold px-2">Email</label>
               <input 
-                type="email" 
+                type="email"
+                name="from_email"
+                required
                 className="w-full bg-white/60 border border-[#1A1A1A]/10 rounded-xl px-4 py-3 text-[#1A1A1A] font-dm-sans focus:outline-none focus:border-[#FF78AC] focus:shadow-[0_0_10px_rgba(255,120,172,0.15)] transition-all focus:bg-white placeholder-[#1A1A1A]/30"
                 placeholder="aryan@example.com"
               />
@@ -79,16 +135,55 @@ export default function Contact() {
             <label className="font-space-mono text-xs uppercase text-[#1A1A1A]/70 font-bold px-2">Message</label>
             <textarea 
               rows={4}
+              name="message"
+              required
               className="w-full bg-white/60 border border-[#1A1A1A]/10 rounded-xl px-4 py-3 text-[#1A1A1A] font-dm-sans focus:outline-none focus:border-[#FF78AC] focus:shadow-[0_0_10px_rgba(255,120,172,0.15)] transition-all resize-none focus:bg-white placeholder-[#1A1A1A]/30"
               placeholder="Tell us about your project..."
             />
           </div>
-          <button type="button" className="group w-full md:w-auto px-8 py-4 rounded-xl font-dm-sans font-bold text-white bg-[#FF78AC] border border-transparent hover:border-[#1A1A1A]/10 transition-all flex items-center justify-center gap-2 relative overflow-hidden shadow-[0_4px_14px_0_rgba(255,120,172,0.39)]">
+          <button
+            type="submit"
+            disabled={isSubmitting}
+            className="group w-full md:w-auto px-8 py-4 rounded-xl font-dm-sans font-bold text-white bg-[#FF78AC] border border-transparent hover:border-[#1A1A1A]/10 transition-all flex items-center justify-center gap-2 relative overflow-hidden shadow-[0_4px_14px_0_rgba(255,120,172,0.39)] disabled:opacity-60 disabled:cursor-not-allowed"
+          >
             <div className="absolute inset-0 bg-gradient-to-r from-[#A8D5E3]/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-            <span className="relative z-10 text-[#1A1A1A] group-hover:text-white transition-colors">Send Inquiry</span>
-            <Send className="w-4 h-4 relative z-10 text-[#1A1A1A] group-hover:text-white group-hover:translate-x-1 transition-all" />
+            <span className="relative z-10 text-[#1A1A1A] group-hover:text-white transition-colors">
+              {isSubmitting ? 'Sending...' : 'Send Inquiry'}
+            </span>
+            {!isSubmitting && (
+              <Send className="w-4 h-4 relative z-10 text-[#1A1A1A] group-hover:text-white group-hover:translate-x-1 transition-all" />
+            )}
+            {isSubmitting && (
+              <div className="w-4 h-4 relative z-10 border-2 border-[#1A1A1A]/30 border-t-[#1A1A1A] rounded-full animate-spin" />
+            )}
           </button>
         </motion.form>
+
+        {/* Submission Toast */}
+        {submitStatus !== 'idle' && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 20 }}
+            className={`mt-6 w-full px-6 py-4 rounded-xl font-dm-sans font-medium text-center backdrop-blur-md border flex items-center justify-center gap-3 ${
+              submitStatus === 'success'
+                ? 'bg-emerald-50/80 text-emerald-800 border-emerald-200'
+                : 'bg-red-50/80 text-red-800 border-red-200'
+            }`}
+          >
+            {submitStatus === 'success' ? (
+              <>
+                <CheckCircle className="w-5 h-5 text-emerald-600 shrink-0" />
+                <span>Inquiry sent successfully! We'll get back to you soon. ✨</span>
+              </>
+            ) : (
+              <>
+                <AlertTriangle className="w-5 h-5 text-red-600 shrink-0" />
+                <span>Something went wrong. Please try again or email us directly.</span>
+              </>
+            )}
+          </motion.div>
+        )}
 
       </div>
     </section>

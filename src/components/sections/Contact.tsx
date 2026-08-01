@@ -53,11 +53,11 @@ export default function Contact() {
 
 
   return (
-    <section id="contact" className="py-32 bg-[#F2F0EA]">
-      <div className="max-w-4xl mx-auto px-6 flex flex-col items-center">
-        
-        <motion.div 
-          className="font-space-mono text-sm tracking-widest text-[#FF78AC] uppercase mb-6 font-bold"
+    <section id="contact" className="py-16 sm:py-24 lg:py-32 bg-[#F2F0EA]">
+      <div className="max-w-4xl mx-auto px-5 sm:px-6 flex flex-col items-center">
+
+        <motion.div
+          className="font-space-mono text-xs sm:text-sm tracking-widest text-[#FF78AC] uppercase mb-5 sm:mb-6 font-bold"
           initial={{ opacity: 0, y: 10 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
@@ -65,9 +65,9 @@ export default function Contact() {
           [ START A PROJECT ]
         </motion.div>
 
-        <motion.a 
+        <motion.a
           href="mailto:theart.illeryuniverse@gmail.com"
-          className="font-syne font-bold text-4xl md:text-5xl lg:text-7xl text-[#1A1A1A] text-center hover:text-[#FF78AC] transition-colors duration-300 mb-12 isolate drop-shadow-sm"
+          className="font-syne font-bold text-2xl sm:text-4xl md:text-5xl lg:text-7xl text-[#1A1A1A] text-center hover:text-[#FF78AC] transition-colors duration-300 mb-10 sm:mb-12 isolate drop-shadow-sm break-all sm:break-normal"
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
@@ -75,6 +75,7 @@ export default function Contact() {
         >
           theart.illeryuniverse@gmail.com
         </motion.a>
+
 
         <motion.div 
           className="flex items-center gap-6 mb-16"

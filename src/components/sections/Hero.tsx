@@ -69,10 +69,16 @@ export default function Hero() {
           </motion.p>
 
           <motion.div variants={textVariants} className="flex flex-wrap items-center justify-center lg:justify-start gap-3 sm:gap-4 mt-2">
-            <button className="group relative px-6 sm:px-8 py-3 sm:py-4 rounded-full font-dm-sans font-bold text-white bg-[#FF78AC] overflow-hidden shadow-[0_4px_14px_0_rgba(255,120,172,0.39)] active:scale-95 transition-transform">
+            <button
+              onClick={() => document.getElementById('reel')?.scrollIntoView({ behavior: 'smooth' })}
+              className="group relative px-6 sm:px-8 py-3 sm:py-4 rounded-full font-dm-sans font-bold text-white bg-[#FF78AC] overflow-hidden shadow-[0_4px_14px_0_rgba(255,120,172,0.39)] active:scale-95 transition-transform"
+            >
               <span className="relative z-10 flex items-center gap-2">View Reel <span>→</span></span>
             </button>
-            <button className="px-6 sm:px-8 py-3 sm:py-4 rounded-full font-dm-sans font-bold text-[#1A1A1A] border border-[#1A1A1A]/20 hover:bg-[#1A1A1A]/5 active:scale-95 transition-all">
+            <button
+              onClick={() => document.getElementById('work')?.scrollIntoView({ behavior: 'smooth' })}
+              className="px-6 sm:px-8 py-3 sm:py-4 rounded-full font-dm-sans font-bold text-[#1A1A1A] border border-[#1A1A1A]/20 hover:bg-[#1A1A1A]/5 active:scale-95 transition-all"
+            >
               Our Work
             </button>
           </motion.div>

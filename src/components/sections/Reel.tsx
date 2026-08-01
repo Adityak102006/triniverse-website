@@ -8,7 +8,7 @@ export default function Reel() {
   const [playing, setPlaying] = useState(false);
 
   return (
-    <section className="relative py-16 md:py-24 lg:py-32 bg-[#FF78AC] flex flex-col items-center overflow-hidden">
+    <section id="reel" className="relative py-16 md:py-24 lg:py-32 bg-[#FF78AC] flex flex-col items-center overflow-hidden">
       {/* Background orb */}
       <motion.div
         className="absolute -top-40 -left-40 w-[600px] h-[600px] rounded-full mix-blend-multiply opacity-50 pointer-events-none"
